@@ -2,10 +2,12 @@
 ## Innovate Inc. – AWS Cloud Infrastructure
 
 **Author:** Somto Ezeh
+
 **Date:** 10-01-2026
+
 **Cloud Provider:** AWS
 
-Target Audience: Engineering, Platform, Security
+**Target Audience:** Engineering, Platform, Security
 
 ## 1. Introduction
 
