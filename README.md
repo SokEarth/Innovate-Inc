@@ -87,6 +87,7 @@ With this in mind we need to define a multi-account strategy for our cloud platf
 ### 5.3 Account Breakdown & Purpose 
 
 1. **Management (Shared Services) Account**
+
    Purpose:
    Acts as the root account of the AWS Organization Centralized governance and shared tooling.
    
@@ -95,8 +96,9 @@ With this in mind we need to define a multi-account strategy for our cloud platf
    
    Justification: Prevents day-to-day workloads from running in the root account Enables centralized security controls Simplifies access management across environments
 
-2. **Non-Production Account (Dev / Staging)**
-   Account purpose:
+3. **Non-Production Account (Dev / Staging) Account**
+
+   purpose:
    Hosts development and staging environments
 
    Target Workloads:
@@ -108,7 +110,8 @@ With this in mind we need to define a multi-account strategy for our cloud platf
    Keeps costs low by using smaller resources.
    Reduces blast radius of misconfigurations.
    
-3. **Production Account**
+5. **Production Account**
+
    Purpose:
    Hosts all customer-facing production workloads
 
