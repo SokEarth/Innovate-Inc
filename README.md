@@ -1,13 +1,10 @@
 # Architecture Design Document
 ## Innovate Inc. – AWS Cloud Infrastructure
 
-**Author:** Somto Ezeh
-
-**Date:** 10-01-2026
-
-**Cloud Provider:** AWS
-
-**Target Audience:** Engineering, Platform, Security
+* **Author:** Somto Ezeh
+* **Date:** 10-01-2026
+* **Cloud Provider:** AWS
+* **Target Audience:** Engineering, Platform, Security
 
 ## 1. Introduction
 
@@ -24,29 +21,29 @@ The design prioritizes security due to the handling of sensitive user data, supp
 
 The primary objectives of this architecture are to:
 
-- Provide a secure and production-ready AWS environment.
-- Leverage managed Kubernetes to reduce operational complexity.
-- Support horizontal scalability to accommodate rapid user growth.
-- Enable CI/CD for frequent and reliable deployments.
-- Protect sensitive user data through strong security controls.
-- Remain cost-effective at low initial traffic, with the ability to scale as needed.
+* Provide a secure and production-ready AWS environment.
+* Leverage managed Kubernetes to reduce operational complexity.
+* Support horizontal scalability to accommodate rapid user growth.
+* Enable CI/CD for frequent and reliable deployments.
+* Protect sensitive user data through strong security controls.
+* Remain cost-effective at low initial traffic, with the ability to scale as needed.
 
 ### 2.2 Out of Scope
 
 The following areas are explicitly out of scope for this document:
 
-- Application-level business logic.
-- Frontend or backend code design.
-- Advanced analytics, machine learning, or data warehousing.
-- Multi-cloud or on-premises deployments.
+* Application-level business logic.
+* Frontend or backend code design.
+* Advanced analytics, machine learning, or data warehousing.
+* Multi-cloud or on-premises deployments.
 
 ## 3. Assumptions
 
-- The application components are containerized using Docker.
-- Innovate Inc. prefers managed AWS services over self-managed solutions.
-- Standard security requirements apply (encryption at rest and in transit).
-- Infrastructure will be defined using Infrastructure as Code (IaC).
-- CI/CD pipelines will be integrated with the Kubernetes deployment process.
+* The application components are containerized using Docker.
+* Innovate Inc. prefers managed AWS services over self-managed solutions.
+* Standard security requirements apply (encryption at rest and in transit).
+* Infrastructure will be defined using Infrastructure as Code (IaC).
+* CI/CD pipelines will be integrated with the Kubernetes deployment process.
 
 ## 4. High-Level Architecture Overview
 
@@ -62,19 +59,17 @@ At a high level, the proposed architecture consists of:
 
 A detailed breakdown of each component is provided in the following sections.
 
----
-
 ## 5. Cloud Environment Structure
 
 ### 5.1 Context
 When a company starts small, as is the case with Innovate Inc, everything might live in a single cloud account i.e the dev, staging and production environments all sharing the same AWS account. 
 That’s fine early on, but as things grow, it leads to:
-- Security risks: Devs accidentally accessing prod resources.
-- Unclear cost visibility IAM sprawl: Too many permissions, this becomes difficult to manage.
-- Environment interference: Testing code impacting production.
-- Compliance issues: No proper data separation or isolation.
+* Security risks: Devs accidentally accessing prod resources.
+* Unclear cost visibility IAM sprawl: Too many permissions, this becomes difficult to manage.
+* Environment interference: Testing code impacting production.
+* Compliance issues: No proper data separation or isolation.
 
-With this in mind we need to define a multi-account strategy for our cloud platform. A multi-account defines how an organization structures and governs its cloud accounts. This strategy fixes the above listed problems by organizing aws infrastructure into multiple, isolated accounts or projects based on function, environment or team ownership.
+With these in mind we need to define a multi-account strategy for our cloud platform. A multi-account defines how an organization structures and governs its cloud accounts. This strategy fixes the above listed problems by organizing aws infrastructure into multiple, isolated accounts or projects based on function, environment or team ownership.
 
 ### 5.2 AWS Account Strategy
 
@@ -89,43 +84,51 @@ With this in mind we need to define a multi-account strategy for our cloud platf
 1. **Management (Shared Services) Account**
 
    Purpose:
-   Acts as the root account of the AWS Organization Centralized governance and shared tooling.
+   * Acts as the root account of the AWS Organization Centralized governance and shared tooling.
    
    Responsibilities:
-   AWS Organizations and SCPs Centralized billing and cost management IAM identity federation (e.g. SSO) Centralized logging (CloudTrail, Config) Shared CI/CD tooling (optional at early stage).
+   * AWS Organizations and SCPs Centralized billing and cost management.
+   * IAM identity federation (e.g. SSO).
+   * Centralized logging (CloudTrail, Config).
+   * Shared CI/CD tooling (optional at early stage).
    
-   Justification: Prevents day-to-day workloads from running in the root account Enables centralized security controls Simplifies access management across environments
+   Justification:
+   * Prevents day-to-day workloads from running in the root account.
+   * Enables centralized security controls.
+   * Simplifies access management across environments.
 
 3. **Non-Production Account (Dev / Staging) Account**
 
-   purpose:
-   Hosts development and staging environments
+   Purpose:
+   * Hosts development and staging environments.
 
    Target Workloads:
-   EKS cluster for development/testing RDS PostgreSQL (smaller instance sizes) CI/CD test deployments Experimental or temporary infrastructure.
+   * EKS cluster for development/testing.
+   * RDS PostgreSQL (smaller instance sizes).
+   * CI/CD test deployments Experimental or temporary infrastructure.
 
-   Justification: 
-   Isolates unstable or experimental workloads from production.
-   Enables developers to iterate safely.
-   Keeps costs low by using smaller resources.
-   Reduces blast radius of misconfigurations.
+   Justification:
+   * Isolates unstable or experimental workloads from production.
+   * Enables developers to iterate safely.
+   * Keeps costs low by using smaller resources.
+   * Reduces blast radius of misconfigurations.
    
 5. **Production Account**
 
    Purpose:
-   Hosts all customer-facing production workloads
+   * Hosts all customer-facing production workloads.
 
    Workloads:
-   Production EKS cluster.
-   Production RDS PostgreSQL (Multi-AZ).
-   Load balancers, networking, monitoring.
-   Production secrets and encryption keys.
+   * Production EKS cluster.
+   * Production RDS PostgreSQL (Multi-AZ).
+   * Load balancers, networking, monitoring.
+   * Production secrets and encryption keys.
 
    Justification:
-   Strong isolation for sensitive user data.
-   Allows stricter IAM and security controls.
-   Limits impact of security incidents or human error.
-   Enables accurate cost tracking for production.
+   * Strong isolation for sensitive user data.
+   * Allows stricter IAM and security controls.
+   * Limits impact of security incidents or human error.
+   * Enables accurate cost tracking for production.
 
 
 ## 6. Network Design
@@ -209,3 +212,8 @@ The Kubernetes Cluster would consist of:
 * Point-in-time recovery should be enabled.
 * Multi-AZ deployment should be used for high availability.
 * The option to add read replicas as traffic grows is provided.
+
+## 10. Illustration
+
+A high-level architecture diagram for the proposed AWS solution is available at the following link:
+[High-Level Architecture Diagram](https://github.com/SokEarth/Innovate-Inc/blob/e7cc7712de9d42cd1c04c3ec1cb256eaaa393bb5/Innovate%20Inc%20AWS%20Architecture.png)
